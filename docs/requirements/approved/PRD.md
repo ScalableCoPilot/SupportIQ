@@ -7,18 +7,18 @@
 | Document status | Approved at Gate 4 |
 | Requirements gate | Gate 3 package approved as presented |
 | PRD approval | Approved by project owner; date not recorded |
-| Post-approval change | CHG-001 / DEC-040 confirms the 10 MB per-file upload maximum |
-| Implementation planning | Gate 5 authorized; plan approved; implementation remains unauthorized |
+| Post-approval changes | CHG-001 / DEC-040 confirms the 10 MB per-file upload maximum; CHG-002 records approved implementation technology and design decisions; CHG-003 / DEC-055 defines the limit as 10,000,000 bytes; CHG-004 / DEC-060 amends the Platform Admin TenantId claim requirement |
+| Implementation planning | Gate 5 authorized; plan approved; implementation authorized under DEC-042 |
 | Source of truth | [Gate 3 requirements inventory](../analysis/requirements-inventory.md), [traceability matrix](../analysis/requirements-traceability.md), and linked evidence |
 | Original baseline | [SupportIQ-Baseline.md](../baseline/SupportIQ-Baseline.md); preserved unchanged |
 
-This PRD consolidates the Gate 3-approved requirements and was approved at Gate 4 with Q-033 open. The project owner subsequently confirmed the 10 MB per-file upload maximum, resolving Q-033 under DEC-040. Explicitly Draft/unprioritized baseline items and other unresolved or deferred decisions retain their existing status and are not promoted by this document.
+This PRD consolidates the Gate 3-approved requirements and was approved at Gate 4 with Q-033 open. The project owner subsequently confirmed the 10 MB per-file upload maximum under DEC-040, specified its exact byte threshold under DEC-055, made the implementation technology/design decisions listed in CHG-002, and amended the Platform Admin JWT tenant-claim requirement under DEC-060. Explicitly Draft/unprioritized baseline items and other unresolved or deferred decisions retain their existing status and are not promoted by this document.
 
 ## 2. Executive summary
 
 SupportIQ is an AI-powered customer-support knowledge portal intended to help support teams manage approved knowledge and retrieve grounded answers. The first demonstrable release is an end-to-end Knowledge Management workflow with a retrieval-augmented generation (RAG) assistant for internal support staff and external customers. Access to knowledge and conversations must follow the approved role and tenant boundaries. External knowledge requires review and publication, and unanswered customer questions can be escalated to human support.
 
-The project is for a learning/portfolio demonstration and uses synthetic data. The owner approved local development and testing followed by a hosted Azure demo, Azure SQL for local-development and hosted environments, and Azure AI Foundry for answer generation and embeddings. Exact models, region, resource configuration, measurable service targets, and detailed API contracts remain open for their specified later design stages.
+The project is for a learning/portfolio demonstration and uses synthetic data. The owner approved local development followed by a hosted Azure demo and selected the implementation stack and supporting architecture/services under DEC-041–DEC-052. Exact AI models/region, resource configuration, measurable service targets, and detailed API contracts remain open for their specified design stages.
 
 ## 3. Problem statement
 
@@ -39,7 +39,7 @@ The baseline describes a need for support agents to find approved information an
 ### 5.1 In scope — first demonstrable release
 
 - Knowledge document upload, processing, lifecycle management, and RAG retrieval for the approved first-release slice.
-- Uploaded files must not exceed 10 MB per file.
+- Uploaded files must not exceed 10 MB per file (10,000,000 bytes; DEC-055).
 - Internal support staff and external customers as assistant audiences.
 - Tenant- and role-scoped knowledge retrieval and conversation access.
 - Internal knowledge management and external article review, approval, rejection, publication, and withdrawal for review.
@@ -107,7 +107,7 @@ The approved business requirements and success-measure limitations are listed in
 |---|---|
 | Customer assistant (`FR-CA-01`–`FR-CA-16`) | The baseline-derived assistant and knowledge-retrieval capabilities supporting the approved RAG slice; internal and external audiences; permission-scoped retrieval; approved/published-only external knowledge; source references; abstention; human escalation; server-derived external tenant scope; and per-account/tenant conversation-history isolation. |
 | Knowledge management (`FR-KB-01`–`FR-KB-17`) | The baseline-derived ingestion and retrieval capabilities supporting the approved knowledge workflow, including a 10 MB maximum per uploaded file; Support Agent management of internal knowledge; role-bounded external article authoring and approval/publication; outdated-content review/withdrawal; configurable review timing with a 90-day default and per-article override. |
-| Tenant operations (`FR-OP-09`–`FR-OP-14`) | Tenant Admin membership management and audit; configurable JWT expiry and token renewal/revocation support; local development followed by a hosted Azure demo; Azure SQL in both environments; required JWT claims (`UserId`, `UserName`, `TenantId`, `Role`, `exp`) and server-side validation of tenant and role. |
+| Tenant operations (`FR-OP-09`–`FR-OP-14`) | Tenant Admin membership management and audit; configurable JWT expiry and token renewal/revocation support; local development followed by a hosted Azure demo; Azure SQL in both environments; JWT claims `UserId`, `UserName`, `Role`, and `exp` for authenticated users, with `TenantId` included for tenant-scoped users and omitted for Platform Admin; server-side validation of tenant and role where applicable. |
 | RAG and evaluation (`AI-001`, `AI-002`) | Retrieve only authorized knowledge, preserve source references, abstain when evidence is inadequate/conflicting, and maintain tenant boundaries. Before release approval, detailed design must define evaluation datasets, measurable metrics, and acceptance thresholds. |
 | Platform operations (`ROLE-004`, `RULE-010`–`RULE-011`) | Allow access to approved platform-level operational metadata only; prohibit access to tenant business content and customer data. |
 | Deferred requirements | Ticket intelligence, agent-copilot features beyond the approved RAG assistant, analytics, ticket/customer lookup tools, and other remaining baseline-only capabilities are not promoted into the first-release scope unless separately approved. |
@@ -157,9 +157,12 @@ Other baseline-only rules remain Draft as shown in the [requirements inventory](
 |---|---|
 | Azure SQL for local-development and hosted environments | Approved at Gate 3 |
 | Azure AI Foundry for answer generation and embeddings | Approved at Gate 3; exact models, region, deployment configuration, and cost envelope deferred |
-| Identity backed by Azure SQL with JWT authentication | Approved at Gate 3; token expiry is configurable; renewal/revocation supported; exact lifetime and refresh-token choice deferred |
+| Identity backed by Azure SQL with JWT authentication | Approved at Gate 3; access-token expiry is configurable; first release has no refresh tokens and renews by reauthentication (DEC-051); user-wide Identity security-stamp validation revokes tokens (DEC-052); exact lifetime remains open under Q-026 |
 | Detailed API contracts | Authentication, tenant isolation, role authorization, secure knowledge access, and consistent source/derived deletion requirements approved; endpoint paths, schemas, validation details, pagination, idempotency, and error formats deferred to solution/detailed design |
-| Azure AI Search, Blob Storage, and background processing service | Named by the baseline but not separately approved as service/configuration decisions |
+| .NET 10 / ASP.NET Core, React + TypeScript, Bootstrap, SQL Server/Azure SQL, Azure AI Foundry | Approved for implementation under DEC-041; EF Core approved under DEC-050; exact Foundry models, region, and deployment configuration remain open |
+| Backend architecture | Modular monolith API with separate React application under DEC-044 |
+| Search, source-document storage, background processing | Azure AI Search (DEC-045); Azure Blob Storage for local/hosted sources, with local Azure development storage (DEC-046/047); Azure Function triggered by Azure Service Bus (DEC-048), using a dedicated Azure development namespace locally (DEC-049). Account availability and resource/configuration details remain unverified; no provisioning is authorized. |
+| Identity session design | Email/password sign-in (DEC-054); no refresh tokens initially; renew by reauthentication and revoke all of a user's tokens by Identity security-stamp validation (DEC-051/052). Internal users have active membership in one tenant only (DEC-053). Access-token lifetime remains configurable and undecided. |
 | External ticketing/CRM/email/messaging integrations | Not part of the approved first-release slice |
 | .NET 10 / ASP.NET Core, React + TypeScript, Bootstrap, other baseline services | Proposed or baseline-stated technology choices; not promoted to approved constraints unless separately recorded as approved |
 
@@ -192,7 +195,8 @@ Key risks are cross-tenant leakage, inaccurate or overconfident model output, do
 - WCAG conformance level.
 - API contract details and model/search failure handling.
 - External-customer registration/verification; membership invitation/approval workflows; detailed role-restriction assignment.
-- Azure AI Search, Blob Storage, and background processing service selection/configuration.
+- Azure AI Search, Blob Storage, and Function/Service Bus resource configuration, local account availability, and provisioning.
+- Exact JWT access-token lifetime and database-check performance for Identity security-stamp revocation.
 - Ticket data taxonomy/fields/seed strategy and delivery workflow requirements in their deferred phases.
 - Full prioritization/disposition of remaining baseline-only requirements.
 - A measurable KPI for the later pilot described by BR-005.
@@ -216,6 +220,6 @@ The full approved story, acceptance-criteria, and requirement mapping is maintai
 | Gate 2 — discovery findings | Approved as sufficiently complete to prepare the requirements package |
 | Gate 3 — requirements package | Approved as presented; Draft/unprioritized items and unresolved/deferred decisions retain their statuses |
 | Gate 4 — this PRD | Approved by the project owner; Q-033 was open at approval and was subsequently resolved under DEC-040; date not recorded |
-| Gate 5 — implementation planning | Planning authorized and plan approved; implementation authorization remains pending |
+| Gate 5 — implementation planning | Planning authorized and plan approved; implementation separately authorized under DEC-042 |
 
-Gate 4 approval did not itself authorize implementation planning. Separate Gate 5 authorization was recorded under DEC-038 and the plan was approved under DEC-039; no implementation is authorized.
+Gate 4 approval did not itself authorize implementation planning. Separate Gate 5 authorization was recorded under DEC-038 and the plan was approved under DEC-039. The project owner later authorized implementation under DEC-042.

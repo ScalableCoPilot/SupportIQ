@@ -2,15 +2,15 @@
 
 | Field | Value |
 |---|---|
-| Plan version | 0.2 |
+| Plan version | 1.4 |
 | Plan status | `Approved` |
 | PRD | [Approved PRD](../requirements/approved/PRD.md), Gate 4; Q-033 resolved under DEC-040 |
 | Gate 5 | Authorized by project owner on 2026-11-12 for planning only; DEC-038 / EV-064 |
 | Prepared on | 2026-11-12 |
 | Repository baseline | `main` at `cac01d5296b92a6d4d7b93610a128ba65d388b53` |
-| Implementation status | Not authorized; plan approval does not authorize code changes |
+| Implementation status | Authorized by DEC-042; scaffold complete; detailed contracts are in progress |
 
-The project owner approved this plan on 2026-11-12. Plan approval does not authorize code changes or resolve the open requirements and technical decisions listed below.
+The project owner approved this plan on 2026-11-12. Implementation was separately authorized under DEC-042; that authorization does not resolve open requirements/design decisions or authorize Azure resource provisioning.
 
 ## 1. Scope and objectives
 
@@ -38,19 +38,22 @@ Plan the approved first demonstrable release: tenant-safe knowledge ingestion an
 
 | Area | Discovered state |
 |---|---|
-| Application code | None found; repository currently contains project instructions, requirements, and implementation templates only. |
-| Build/test conventions | No solution, package manifest, application test project, or executable test suite found. |
-| Backend/frontend | Not established by existing code. `.NET 10 / ASP.NET Core`, React/TypeScript, and Bootstrap are proposed defaults in project instructions, not approved constraints. |
-| Database | Azure SQL is approved for local-development and hosted environments; schema and environment configuration are not implemented. |
+| Application code | Initial .NET 10 API and React + TypeScript/Vite scaffold exists under `src\backend` and `src\frontend`. |
+| Build/test conventions | `SupportIQ.sln` builds the API; the frontend uses npm scripts for build and lint. Feature test projects are not yet established. |
+| Backend/frontend | Approved by DEC-041: .NET 10 / ASP.NET Core, React with TypeScript, and Bootstrap. Vite is approved under DEC-043. DEC-044 selects one feature-modular API deployment and a separate frontend application. |
+| Database | SQL Server/Azure SQL and EF Core are approved under DEC-041/DEC-050. Schema and environment configuration are not implemented. |
+| Identity sessions | No refresh tokens in the first release; reauthentication renews access. User-wide Identity security-stamp validation revokes tokens under DEC-051/DEC-052. Access-token lifetime remains configurable and undecided. |
+| Tenant membership | Internal support users have active membership in one tenant only under DEC-053; tenant/role claims are derived from active membership. |
+| Sign-in identifier | Email/password sign-in approved under DEC-054; registration, verification, invitation, and password-reset workflows remain deferred. |
 | AI | Azure AI Foundry is approved for answer generation and embeddings; exact models, region, deployment, quota, compatibility, and cost envelope remain open. |
-| Search, files, background processing | Azure AI Search, Blob Storage, and the processing service are not approved service/configuration decisions. |
+| Search, files, background processing | Azure AI Search is approved under DEC-045 for keyword/vector retrieval. Azure Blob Storage is approved under DEC-046 for local and hosted source documents; local development is intended to use an Azure development account under DEC-047, whose availability/configuration is unverified. Asynchronous processing uses an Azure Function triggered by Azure Service Bus under DEC-048; local execution will use a dedicated Azure development namespace under DEC-049, not yet verified. |
 | Hosting | Local development/testing followed by a hosted Azure demo is approved; resources and deployment topology are not selected. |
 | Reusable capabilities | No application components to reuse were found. Existing planning templates are in `docs/implementation/templates/`. |
-| Architecture | No solution architecture is approved or implemented. The Laravel-specific senior-developer skill does not match the repository's proposed stack and is not treated as a project technology decision. |
+| Architecture | DEC-044 approves a modular monolith: one ASP.NET Core API deployment organized into feature-oriented modules and a separate React frontend. Azure AI Search and Azure Blob Storage are selected under DEC-045/DEC-046; document processing uses an Azure Function with Service Bus under DEC-048. EF Core is approved under DEC-050. Local storage/queue account availability and detailed persistence boundaries remain open. |
 
 ### Technical approach for planning
 
-Start with a decision/design milestone before implementation. Confirm the application stack, solution boundaries, API and data contracts, and Azure service/configuration choices against approved requirements. Keep this plan technology-neutral where those choices are still open. No architecture decision record is created because no new technical decision has been approved.
+The project owner has approved the application stack, Vite frontend tooling, and a modular-monolith backend with a separate React frontend. Continue to resolve detailed API/data/identity contracts and Azure service/configuration choices against approved requirements before dependent feature work or resource provisioning.
 
 ## 3. Requirement coverage summary
 
@@ -104,7 +107,7 @@ Estimates are relative T-shirt sizes for feature scope, not durations or commitm
 - **Epic / estimate / priority:** EPIC-001 / L / Must.
 - **Outcome and value:** Authenticate internal users and external customers and enforce server-derived tenant and role boundaries.
 - **Requirement links:** FR-CA-14, FR-OP-10–FR-OP-11, FR-OP-14, API-001, ROLE-001–ROLE-005, RULE-010–RULE-015, AC-001, AC-004, AC-007, AC-010.
-- **Acceptance:** JWT carries required `UserId`, `UserName`, `TenantId`, `Role`, and `exp` claims; tenant and role are validated server-side; tenant cannot be selected by request parameters/headers; expiry, renewal, and revocation are configurable; unauthorized role/tenant/customer access is denied.
+- **Acceptance:** JWT carries `UserId`, `UserName`, `Role`, and `exp`; tenant-scoped users also carry `TenantId`, while Platform Admin tokens omit it (DEC-060); tenant and role are validated server-side where applicable; tenant cannot be selected by request parameters/headers; expiry, renewal, and revocation are configurable; unauthorized role/tenant/customer access is denied.
 - **Dependencies / risks:** FEAT-001. RISK-001, RISK-007, RISK-008.
 - **Verification:** Positive and negative API/integration tests for each approved access boundary; no tenant-content access path bypasses authorization.
 
@@ -269,7 +272,7 @@ Likelihood and impact were not rated in the source risk register. They remain un
 | Q-019 / API-001 | Open design item | Detailed API paths, schemas, validation, pagination, idempotency, and error formats. | Define contracts in FEAT-001 without changing approved auth, tenant, role, knowledge-access, and deletion invariants. | Project owner / deferred to design |
 | Q-006 / Q-008 | Open design items | Exact token lifetime/refresh-token choice and detailed invitation/approval or role-restriction assignment workflows. | Design configurable auth and preserve approved role authority; obtain decisions before affected behavior is fixed. | Project owner / deferred to design |
 | API-002 / technology baseline | Open design items | Search, Blob Storage, background-processing service, and resource configuration. | Do not select or provision services until the project owner approves the design. | Project owner / open |
-| Project instructions | Proposed technology | .NET 10, React/TypeScript, Bootstrap, and modular architecture are proposed, not approved. | Confirm or replace explicitly before implementation; this draft does not choose them. | Project owner / unresolved |
+| DEC-041 / DEC-043 | Approved technology/tooling | .NET 10 / ASP.NET Core, React with TypeScript, Bootstrap, SQL Server, local database identity with JWT, Azure AI Foundry, and Vite frontend tooling are approved. | Implement the approved baseline; detailed architecture boundaries and service/configuration decisions remain open under TASK-001–TASK-003. | Project owner / approved |
 | DEC-033 | Deferred scope | GitHub issue/PR, CI, and delivery workflow requirements. | Excluded from this first-release plan unless scope is separately approved. | Project owner / deferred |
 
 ## 11. Dependency graph and sequencing
@@ -296,9 +299,21 @@ Dependencies in the task board are one-way and do not form cycles. Features may 
 | Version | Date | Decision | Approver | Notes |
 |---|---|---|---|---|
 | 0.1 | 2026-11-12 | Draft prepared under Gate 5 authorization | Project owner | DEC-038 / EV-064. |
-| 0.1 | 2026-11-12 | Plan approved as written | Project owner | DEC-039 / EV-065. Implementation not authorized. |
-| 0.2 | 2026-11-12 | Updated approved plan to reflect the confirmed 10 MB per-file limit | Project owner decision recorded as DEC-040 / EV-066 | Requirement/task alignment only; implementation remains unauthorized. |
+| 0.1 | 2026-11-12 | Plan approved as written | Project owner | DEC-039 / EV-065. Implementation authorization was pending at plan approval. |
+| 0.2 | 2026-11-12 | Updated approved plan to reflect the confirmed 10 MB per-file limit | Project owner decision recorded as DEC-040 / EV-066 | Requirement/task alignment only; implementation authorization was pending. |
+| 0.3 | 2026-11-12 | Recorded implementation authorization, approved stack/tooling, and the initial scaffold task | Project owner | DEC-041–DEC-043 / EV-067–EV-069. No product requirements or Azure resource decisions are changed. |
+| 0.4 | 2026-11-12 | Recorded modular-monolith architecture decision | Project owner | DEC-044 / EV-070; detailed contracts and service decisions remain open. |
+| 0.5 | 2026-11-12 | Recorded Azure AI Search selection for knowledge retrieval | Project owner | DEC-045 / EV-071; resource and index configuration remain open. |
+| 0.6 | 2026-11-12 | Recorded Azure Blob Storage selection for local and hosted source documents | Project owner | DEC-046 / EV-072; local connection method and resource configuration remain open. |
+| 0.7 | 2026-11-12 | Recorded Azure development storage account as the intended local Blob connection | Project owner | DEC-047 / EV-073; account availability/configuration unverified; no resource access/provisioning authorized. |
+| 0.8 | 2026-11-12 | Recorded Azure Function with Service Bus queue trigger for document processing | Project owner | DEC-048 / EV-074; queue configuration, local connection, and resource decisions remain open. |
+| 0.9 | 2026-11-12 | Recorded dedicated Azure development Service Bus namespace for local Function execution | Project owner | DEC-049 / EV-075; namespace availability/configuration unverified; no resource access/provisioning authorized. |
+| 1.0 | 2026-11-12 | Recorded EF Core as the SQL Server/Azure SQL persistence technology | Project owner | DEC-050 / EV-076; schema and connection configuration remain open. |
+| 1.1 | 2026-11-12 | Recorded first-release no-refresh-token behavior and user-wide security-stamp revocation | Project owner | DEC-051–DEC-052 / EV-077–EV-078; access-token lifetime remains open. |
+| 1.2 | 2026-11-12 | Recorded single-tenant membership for internal support users | Project owner | DEC-053 / EV-079; detailed membership workflow remains open. |
+| 1.3 | 2026-11-12 | Recorded email/password as the sign-in identifier | Project owner | DEC-054 / EV-080; account lifecycle workflows remain deferred. |
+| 1.4 | 2026-11-12 | Amended the Platform Admin JWT tenant-claim requirement | Project owner explicitly approved the requirement change | DEC-060 / EV-086 / CHG-004; tenant-scoped tokens retain `TenantId`; Platform Admin tokens omit it. |
 
 ## 13. Implementation authorization boundary
 
-The plan is approved. Implementation requires separate explicit authorization. Open requirements and technical decisions remain subject to their own approval.
+Implementation is authorized under DEC-042. This does not resolve open requirements/design decisions or authorize Azure resource provisioning. Continue to gate dependent implementation on the decisions identified in this plan and task board.

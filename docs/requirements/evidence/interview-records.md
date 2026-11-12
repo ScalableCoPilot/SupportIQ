@@ -514,3 +514,175 @@ Discovery record. Stakeholder statements are recorded as given and are not gener
 - **Response:** “we can mark 10MB upload file limit”
 - **Recorded finding:** Confirmed a maximum upload size of 10 MB per file for the first release. Q-033 is resolved; the original baseline remains unchanged.
 - **Related records:** DEC-040, EV-066, FR-KB-17, AC-014, and CHG-001.
+
+## Q-034 — Upload limit byte interpretation
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Does the 10 MB per-file maximum mean 10,000,000 bytes (decimal MB) or 10,485,760 bytes (10 MiB)?
+- **Response:** “10,000,000 bytes (decimal MB)”
+- **Recorded finding:** Enforce a maximum of 10,000,000 bytes per uploaded file. Q-034 is resolved; this clarifies implementation of the approved 10 MB limit and does not change it.
+- **Related records:** DEC-055, EV-081, FR-KB-17, and AC-014.
+
+## Implementation authorization and technology stack
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Review:** Current implementation progress and the proposed application stack.
+- **Response:** “we can start it”; approved the proposed stack.
+- **Recorded finding:** Implementation is authorized to begin. The approved stack is .NET 10 / ASP.NET Core, React with TypeScript, Bootstrap, SQL Server, local database identity with JWT, and Azure AI Foundry. Exact architecture boundaries and remaining service/configuration choices are not resolved by this approval.
+- **Related records:** DEC-041, DEC-042, EV-067, and EV-068.
+
+## Frontend tooling approval
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Review:** Selection of the React + TypeScript development/build tool.
+- **Response:** Approved Vite.
+- **Recorded finding:** Vite is approved as frontend development/build tooling; this does not change the approved application stack.
+- **Related records:** DEC-043 and EV-069.
+
+## Backend architecture decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** For the first release, should the backend use a modular monolith (one ASP.NET Core API organized by feature, with the React app separate) or independently deployed microservices?
+- **Response:** “Modular monolith.”
+- **Recorded finding:** Use one ASP.NET Core API deployment organized into feature-oriented modules, with the React frontend as a separate application. Search, file storage, background processing, and other service decisions remain open.
+- **Related records:** DEC-044, EV-070, and [ADR-001](../../architecture/decisions/ADR-001-modular-monolith.md).
+
+## Knowledge search/index decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should SupportIQ use Azure AI Search for keyword and vector retrieval, or defer the search provider decision?
+- **Response:** Approved Azure AI Search.
+- **Recorded finding:** Azure AI Search is the approved search/index service for knowledge retrieval. Resource provisioning, index configuration, embedding-model compatibility, and cost decisions remain open.
+- **Related records:** DEC-045, EV-071, and [ADR-002](../../architecture/decisions/ADR-002-azure-ai-search.md).
+
+## Source-document storage decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should source documents use Azure Blob Storage in both local and hosted environments, or use a local filesystem during development and Blob Storage when hosted?
+- **Response:** “Blob in both environments.”
+- **Recorded finding:** Use Azure Blob Storage for source documents in local development and hosted Azure. The local connection method (emulator or Azure development resource) and resource configuration are not yet selected; no resources are provisioned by this decision.
+- **Related records:** DEC-046, EV-072, and [ADR-003](../../architecture/decisions/ADR-003-azure-blob-storage.md).
+
+## Local Blob Storage connection decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should local development use an Azurite emulator or connect to an Azure development storage account?
+- **Response:** “Azure dev storage.”
+- **Recorded finding:** Local development is intended to connect to an Azure development storage account. Account availability and configuration remain unverified; inspection was declined and provisioning was not authorized.
+- **Related records:** DEC-047, EV-073, and [ADR-003](../../architecture/decisions/ADR-003-azure-blob-storage.md).
+
+## Background document-processing decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Which asynchronous document-processing approach should be used: an API-hosted SQL job queue or a separate Azure Function triggered by a queue?
+- **Response:** “azure function triggered by azure service bus queue”
+- **Recorded finding:** Use an Azure Function triggered by an Azure Service Bus queue for asynchronous document processing. Function/namespace/queue configuration, local connection, retry and idempotency behavior, and resource provisioning remain open.
+- **Related records:** DEC-048, EV-074, and [ADR-004](../../architecture/decisions/ADR-004-azure-function-service-bus-processing.md).
+
+## Local Service Bus connection decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should the locally running Azure Function connect to a dedicated Azure development Service Bus namespace, or should the local queue connection be deferred?
+- **Response:** “Dedicated Azure dev namespace.”
+- **Recorded finding:** Local Function execution will use a dedicated Azure development Service Bus namespace. Namespace availability and configuration remain unverified; credentials must not be committed, and no resources are provisioned by this decision.
+- **Related records:** DEC-049, EV-075, and [ADR-004](../../architecture/decisions/ADR-004-azure-function-service-bus-processing.md).
+
+## SQL data-access decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should application persistence use Entity Framework Core or Dapper/custom SQL with SQL Server/Azure SQL?
+- **Response:** Approved EF Core.
+- **Recorded finding:** Use Entity Framework Core with SQL Server/Azure SQL. Entity/schema design and database contracts remain subject to approved requirements and detailed design.
+- **Related records:** DEC-050, EV-076, and [ADR-005](../../architecture/decisions/ADR-005-ef-core.md).
+
+## First-release token-renewal decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should the first release issue refresh tokens or require reauthentication after a configurable-expiry JWT access token expires?
+- **Response:** “No refresh tokens initially.”
+- **Recorded finding:** Do not issue refresh tokens in the first release; users renew access by authenticating again. Access-token lifetime remains configurable and its value is undecided.
+- **Related records:** DEC-051, EV-077, Q-027, and [ADR-006](../../architecture/decisions/ADR-006-jwt-session-lifecycle.md).
+
+## JWT revocation decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should JWT revocation use a per-token SQL denylist or user-wide ASP.NET Core Identity security-stamp validation?
+- **Response:** “User-wide security stamp.”
+- **Recorded finding:** Revoke all active JWTs for a user by changing the user's Identity security stamp and validating the token stamp against the current user stamp on authenticated requests.
+- **Related records:** DEC-052, EV-078, `FR-OP-11`, and [ADR-006](../../architecture/decisions/ADR-006-jwt-session-lifecycle.md).
+
+## Internal tenant-membership cardinality
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Can an internal support user have active membership in multiple tenants, or only one?
+- **Response:** “Single tenant.”
+- **Recorded finding:** An internal support user may have active membership in one tenant only. The API derives tenant scope and role from active membership, never from a caller-selected tenant parameter or header.
+- **Related records:** DEC-053, EV-079, and [ADR-007](../../architecture/decisions/ADR-007-single-tenant-membership.md).
+
+## Sign-in identifier decision
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should users authenticate with username, email address, or either?
+- **Response:** “Email.”
+- **Recorded finding:** Use email address and password for sign-in for internal and external accounts. Keep the approved user-name JWT claim; registration, verification, invitation, and password-reset workflows remain deferred.
+- **Related records:** DEC-054, EV-080, and the [API contract draft](../api-contracts.md).
+
+## Initial API contract review — token route
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Is `POST /api/v1/auth/token` acceptable as the first-release email/password token-issuance route?
+- **Response:** “Keep POST /api/v1/auth/token”
+- **Recorded finding:** The owner approved this route. Request/response schema details and the remaining endpoint paths and payloads remain draft.
+- **Related records:** DEC-056, EV-082, `FR-OP-10`, `FR-CA-14`, and [API contract draft](../api-contracts.md).
+
+## Initial API contract review — token response
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should the token response include the proposed user identity object (`userId`, `userName`, `tenantId`, `roles`) alongside the token fields?
+- **Response:** “Include the user object”
+- **Recorded finding:** The owner approved the proposed response shape, including the user identity object and token metadata. Remaining request/response details stay draft.
+- **Related records:** DEC-057, EV-083, `FR-OP-10`, `FR-CA-14`, and [API contract draft](../api-contracts.md).
+
+## Initial API contract review — token request fields
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should the token request use `email` and `password` as its JSON property names?
+- **Response:** “Keep email and password”
+- **Recorded finding:** The owner approved `email` and `password` as request property names. Credential validation/error behavior and remaining contract details stay draft.
+- **Related records:** DEC-058, EV-084, `FR-OP-10`, `FR-CA-14`, and [API contract draft](../api-contracts.md).
+
+## Initial API contract review — invalid credentials
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Should invalid email and password combinations return the same generic authentication error?
+- **Response:** “Same generic error”
+- **Recorded finding:** Return the same generic authentication error for an unknown email and an incorrect password, without revealing whether an account exists.
+- **Related records:** DEC-059, EV-085, `FR-OP-10`, `FR-CA-14`, and [API contract draft](../api-contracts.md).
+
+## Platform Admin JWT tenant-claim amendment
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** How should the Platform Admin JWT represent `TenantId`, given the Gate 3-approved requirement that tokens include the claim and the Platform Admin boundary that prohibits tenant-content access?
+- **Response:** “Omit TenantId for Platform Admin”
+- **Explicit requirement-change approval:** Approved changing FR-OP-14 so tenant-scoped users include `TenantId` and Platform Admin tokens omit it.
+- **Recorded finding:** Platform Admin JWTs omit `TenantId`; tenant-scoped identities retain it. `UserId`, `UserName`, `Role`, and `exp` remain required. This is an approved post-Gate-3 amendment; the original baseline is unchanged.
+- **Related records:** DEC-020 (amended), DEC-060, EV-086, CHG-004, FR-OP-14, and [API contract draft](../api-contracts.md).

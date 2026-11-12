@@ -1,0 +1,6 @@
+@SupportIQ.Api_HostAddress = http://localhost:5112
+
+GET {{SupportIQ.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
