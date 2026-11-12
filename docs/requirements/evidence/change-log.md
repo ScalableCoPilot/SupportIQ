@@ -1,0 +1,5 @@
+# SupportIQ Requirements Change Log
+
+| Change ID | Date | Description | Previous state | Updated state | Reason / evidence | Impacted artifacts | Approval status |
+|---|---|---|---|---|---|---|---|
+| CHG-001 | 2026-11-12 | Resolve Q-033 and add the first-release maximum upload size. | The baseline specified a 10 MB per-file maximum, but its continued applicability remained open after Gate 4; the PRD did not list it as a confirmed requirement. | The project owner confirmed a maximum of 10 MB per uploaded file. Added FR-KB-17 and AC-014; the upload implementation task now enforces the limit. | Project owner response to Q-033 recorded in [interview records](./interview-records.md); DEC-040; EV-066. | [PRD](../approved/PRD.md), [requirements inventory](../analysis/requirements-inventory.md), [requirements traceability](../analysis/requirements-traceability.md), [open questions](./open-questions.md), [implementation plan](../../implementation/implementation-plan.md), [feature/task board](../../implementation/feature-task-board.md). The original baseline is unchanged. | Approved by project owner on 2026-11-12 |

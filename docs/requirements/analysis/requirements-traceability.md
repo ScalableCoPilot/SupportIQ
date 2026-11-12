@@ -35,13 +35,14 @@ These stories were approved as part of the Gate 3 package and do not add capabil
 | AC-011 | The first release supports English and applies keyboard navigation, readable contrast, labels, and screen-reader-friendly controls. | `NFR-007`, `NFR-011`, `DEC-032` | Approved at Gate 3; WCAG conformance level remains open |
 | AC-012 | AI/RAG detailed design documents evaluation datasets, measurable metrics, and acceptance thresholds for retrieval quality, grounding, citation correctness, abstention, and prompt-injection handling before release approval. | `AI-002`, `Q-011`, `DEC-029` | Approved at Gate 3 as a release-readiness condition; specific metrics and thresholds remain deferred |
 | AC-013 | Before release approval, measurable latency, availability/recovery, concurrency, and operating-cost targets are defined and performance testing is conducted against the approved targets. | `Q-012`, `DEC-030`, `NFR-004`, `NFR-008`, `NFR-009` | Approved at Gate 3 as a release-readiness condition; no target values are set |
+| AC-014 | The system accepts an uploaded file no larger than 10 MB and rejects a file larger than 10 MB. | `FR-KB-17`, `Q-033`, `DEC-040` | Approved by project owner on 2026-11-12 |
 
 ## Business-to-system traceability
 
 | Business requirement | Related system requirements | Approved story / acceptance criteria | Test cases |
 |---|---|---|---|
 | BR-001 | `FR-OP-*`, `NFR-*`, `DATA-003`, `ROLE-*` | US-001–US-007; AC-006, AC-007, AC-011 | No test-case IDs assigned |
-| BR-002 | First-release `FR-CA-*`, `FR-KB-*`, `AI-001`, `AI-003`, `RULE-*` | US-001–US-006; AC-001–AC-008 | No test-case IDs assigned |
+| BR-002 | First-release `FR-CA-*`, `FR-KB-*`, `AI-001`, `AI-003`, `RULE-*` | US-001–US-006; AC-001–AC-008, AC-014 | No test-case IDs assigned |
 | BR-003 | `FR-EV-*`, `FR-OP-*`, `NFR-001`, `AI-002` | AC-010, AC-012 | No test-case IDs assigned; metrics and thresholds are deferred to detailed design |
 | BR-004 | `FR-OP-04`–`FR-OP-08`, `NFR-003`–`NFR-010`, `API-001` | AC-010, AC-013 | No test-case IDs assigned; CI/delivery workflow requirements are deferred to the next phase |
 | BR-005 | Later-pilot measurement; no baseline metric or target | No candidate story or acceptance criterion defined | Deferred until a pilot and its measures are authorized |
@@ -50,4 +51,4 @@ These stories were approved as part of the Gate 3 package and do not add capabil
 
 - Stories and acceptance criteria were approved as part of the Gate 3 package. Test-case IDs and executable test designs were not included and remain for later test planning.
 - Baseline acceptance statements for ticket AI, analytics, CI, and additional tools remain source evidence; corresponding capabilities are not promoted into first-release scope where the owner deferred them.
-- The PRD was approved at Gate 4 with Q-033 remaining open; implementation planning has not been authorized.
+- The PRD was approved at Gate 4 with Q-033 open; the project owner subsequently resolved it as 10 MB per file under DEC-040. Implementation remains unauthorized.

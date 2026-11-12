@@ -41,11 +41,11 @@ Stakeholder discovery confirmed that both internal support staff and external cu
 
 The project owner stated that a Support Manager or explicitly authorized higher-level role is responsible for external-use approval. Support Agent access to published external knowledge defaults to all such knowledge within the agent's own tenant unless a Support Manager configures role- or permission-based restrictions. Detailed assignment rules may be finalized during detailed design. External customer tenant association is derived server-side from authenticated identity, and customers can access only their own conversations under that account and tenant. Registration/verification workflows and conversation history retention/deletion policies remain unresolved and are deferred to design.
 
-### Knowledge management — source IDs `FR-KB-01`–`FR-KB-16`
+### Knowledge management — source IDs `FR-KB-01`–`FR-KB-17`
 
 Authorized PDF/DOCX/TXT upload; validation of extension, content type, size, and processing outcome; source/version/tenant/uploader/status metadata; extraction, normalization, configurable chunking, embedding, indexing; visible lifecycle status; authorized update/reprocess; removal of stale index content; deletion of source and derived content from availability; source identification in search/citations.
 
-The baseline also states a 10 MB per-file maximum in its confirmed-decisions table and risks section, and a 90-day document-retention period. Stakeholder follow-up set the retention start to original upload and confirmed deletion of source documents, extracted text, chunks, and embeddings after expiry; backup deletion and log/evaluation-record retention remain open.
+The baseline states a 10 MB per-file maximum in its confirmed-decisions table and risks section. The project owner subsequently confirmed that the 10 MB limit applies to the first release, resolving Q-033 under DEC-040. The baseline also specifies 90-day document retention; stakeholder follow-up set the retention start to original upload and confirmed deletion of source documents, extracted text, chunks, and embeddings after expiry. Backup deletion and log/evaluation-record retention remain open.
 
 | ID | Initial requirement statement | Source classification | Status | Trace |
 |---|---|---|---|---|
@@ -57,6 +57,7 @@ The baseline also states a 10 MB per-file maximum in its confirmed-decisions tab
 | FR-KB-14 | Support Agents may create, read, and manage internal knowledge across their own tenant, independent of who uploaded it. They may retrieve internal knowledge in all lifecycle statuses. | Confirmed by stakeholder response | Approved at Gate 3 | [Interview records](../evidence/interview-records.md), Gate 2, Q-008 and Q-021 |
 | FR-KB-15 | Support Agents may create and edit external knowledge articles for Support Manager review. They may not approve, reject, or publish external articles. | Confirmed by stakeholder response | Approved at Gate 3 | [Interview record](../evidence/interview-records.md), Gate 2, Q-008 |
 | FR-KB-16 | Tenant Admins may create and edit external knowledge articles for Support Manager review. They may not approve, reject, or publish external articles. | Confirmed by stakeholder response | Approved at Gate 3 | [Interview record](../evidence/interview-records.md), Gate 2, Q-008 |
+| FR-KB-17 | Each uploaded file must be no larger than 10 MB. | Confirmed by stakeholder response | Approved by project owner on 2026-11-12 under DEC-040 | [Interview record](../evidence/interview-records.md), Q-033; EV-066 |
 
 The stakeholder-confirmed 90-day knowledge review interval is separate from the 90-day document-retention period. Backup deletion and log/evaluation-record retention remain open for detailed design and compliance review.
 
@@ -225,4 +226,4 @@ Gate 3-approved traceability is summarized below; user stories and acceptance cr
 | BR-004 | `FR-OP-04`–`FR-OP-08`, `NFR-003`–`NFR-010` | Setup, deployment, and telemetry; CI/delivery workflow scope deferred to the next phase |
 | BR-005 | Later pilot measurement; no baseline measurement requirement yet | No measurable acceptance criterion defined |
 
-The project owner approved the requirements package and its stories, acceptance criteria, traceability, and stated priorities at Gate 3. The resulting PRD was approved at Gate 4 with Q-033 remaining open. Explicitly Draft/unprioritized baseline items and unresolved/deferred decisions remain unapproved or unresolved as recorded.
+The project owner approved the requirements package and its stories, acceptance criteria, traceability, and stated priorities at Gate 3. The resulting PRD was approved at Gate 4 with Q-033 open; the owner subsequently confirmed the 10 MB per-file maximum under DEC-040. Explicitly Draft/unprioritized baseline items and other unresolved/deferred decisions retain their recorded statuses.

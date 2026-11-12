@@ -7,11 +7,12 @@
 | Document status | Approved at Gate 4 |
 | Requirements gate | Gate 3 package approved as presented |
 | PRD approval | Approved by project owner; date not recorded |
-| Implementation planning | Not authorized; requires separate Gate 5 approval |
+| Post-approval change | CHG-001 / DEC-040 confirms the 10 MB per-file upload maximum |
+| Implementation planning | Gate 5 authorized; plan approved; implementation remains unauthorized |
 | Source of truth | [Gate 3 requirements inventory](../analysis/requirements-inventory.md), [traceability matrix](../analysis/requirements-traceability.md), and linked evidence |
 | Original baseline | [SupportIQ-Baseline.md](../baseline/SupportIQ-Baseline.md); preserved unchanged |
 
-This PRD consolidates the Gate 3-approved requirements and was approved at Gate 4 with Q-033 remaining open. Explicitly Draft/unprioritized baseline items and unresolved or deferred decisions retain their existing status and are not promoted by this document.
+This PRD consolidates the Gate 3-approved requirements and was approved at Gate 4 with Q-033 open. The project owner subsequently confirmed the 10 MB per-file upload maximum, resolving Q-033 under DEC-040. Explicitly Draft/unprioritized baseline items and other unresolved or deferred decisions retain their existing status and are not promoted by this document.
 
 ## 2. Executive summary
 
@@ -38,6 +39,7 @@ The baseline describes a need for support agents to find approved information an
 ### 5.1 In scope — first demonstrable release
 
 - Knowledge document upload, processing, lifecycle management, and RAG retrieval for the approved first-release slice.
+- Uploaded files must not exceed 10 MB per file.
 - Internal support staff and external customers as assistant audiences.
 - Tenant- and role-scoped knowledge retrieval and conversation access.
 - Internal knowledge management and external article review, approval, rejection, publication, and withdrawal for review.
@@ -104,13 +106,13 @@ The approved business requirements and success-measure limitations are listed in
 | Requirement area | Approved first-release requirements |
 |---|---|
 | Customer assistant (`FR-CA-01`–`FR-CA-16`) | The baseline-derived assistant and knowledge-retrieval capabilities supporting the approved RAG slice; internal and external audiences; permission-scoped retrieval; approved/published-only external knowledge; source references; abstention; human escalation; server-derived external tenant scope; and per-account/tenant conversation-history isolation. |
-| Knowledge management (`FR-KB-01`–`FR-KB-16`) | The baseline-derived ingestion and retrieval capabilities supporting the approved knowledge workflow; Support Agent management of internal knowledge; role-bounded external article authoring and approval/publication; outdated-content review/withdrawal; configurable review timing with a 90-day default and per-article override. |
+| Knowledge management (`FR-KB-01`–`FR-KB-17`) | The baseline-derived ingestion and retrieval capabilities supporting the approved knowledge workflow, including a 10 MB maximum per uploaded file; Support Agent management of internal knowledge; role-bounded external article authoring and approval/publication; outdated-content review/withdrawal; configurable review timing with a 90-day default and per-article override. |
 | Tenant operations (`FR-OP-09`–`FR-OP-14`) | Tenant Admin membership management and audit; configurable JWT expiry and token renewal/revocation support; local development followed by a hosted Azure demo; Azure SQL in both environments; required JWT claims (`UserId`, `UserName`, `TenantId`, `Role`, `exp`) and server-side validation of tenant and role. |
 | RAG and evaluation (`AI-001`, `AI-002`) | Retrieve only authorized knowledge, preserve source references, abstain when evidence is inadequate/conflicting, and maintain tenant boundaries. Before release approval, detailed design must define evaluation datasets, measurable metrics, and acceptance thresholds. |
 | Platform operations (`ROLE-004`, `RULE-010`–`RULE-011`) | Allow access to approved platform-level operational metadata only; prohibit access to tenant business content and customer data. |
 | Deferred requirements | Ticket intelligence, agent-copilot features beyond the approved RAG assistant, analytics, ticket/customer lookup tools, and other remaining baseline-only capabilities are not promoted into the first-release scope unless separately approved. |
 
-The baseline specifies a 10 MB per-file upload maximum. The owner approved this PRD with its continued applicability left open as Q-033; the value is not separately identified as a stakeholder-confirmed row in the requirements inventory.
+The project owner confirmed that the maximum upload size is 10 MB per file, resolving Q-033 after Gate 4 approval. Requirement `FR-KB-17` records this constraint; the original baseline remains unchanged.
 
 ## 10. Non-functional requirements
 
@@ -194,14 +196,12 @@ Key risks are cross-tenant leakage, inaccurate or overconfident model output, do
 - Ticket data taxonomy/fields/seed strategy and delivery workflow requirements in their deferred phases.
 - Full prioritization/disposition of remaining baseline-only requirements.
 - A measurable KPI for the later pilot described by BR-005.
-- Q-033: confirm whether the baseline's 10 MB per-file upload maximum remains binding; it remains open after Gate 4 approval.
-
 ## 17. Requirements traceability
 
 | Business requirement | Related approved requirements / trace |
 |---|---|
 | BR-001 | Synthetic-only data (`DATA-003`), role boundaries, approved first-release slice; stories US-001–US-007 |
-| BR-002 | First-release assistant and knowledge-management requirements (`FR-CA-*`, `FR-KB-*`, `AI-001`); stories US-001–US-006; AC-001–AC-008 |
+| BR-002 | First-release assistant and knowledge-management requirements (`FR-CA-*`, `FR-KB-*`, `AI-001`); stories US-001–US-006; AC-001–AC-008, AC-014 |
 | BR-003 | Evaluation requirement `AI-002`, security/tenant isolation, and core API invariants (`API-001`); AC-010 and AC-012 |
 | BR-004 | Approved local-to-Azure environment, Azure SQL, membership/operational requirements, and API invariants; AC-010 and AC-013 |
 | BR-005 | Later-pilot outcome only; no approved metric, target, or acceptance criterion |
@@ -215,7 +215,7 @@ The full approved story, acceptance-criteria, and requirement mapping is maintai
 | Gate 1 — initial baseline analysis | Approved for analysis accuracy and proceeding to discovery |
 | Gate 2 — discovery findings | Approved as sufficiently complete to prepare the requirements package |
 | Gate 3 — requirements package | Approved as presented; Draft/unprioritized items and unresolved/deferred decisions retain their statuses |
-| Gate 4 — this PRD | Approved by the project owner with Q-033 remaining open; date not recorded |
-| Gate 5 — implementation planning | Not authorized; requires separate explicit approval |
+| Gate 4 — this PRD | Approved by the project owner; Q-033 was open at approval and was subsequently resolved under DEC-040; date not recorded |
+| Gate 5 — implementation planning | Planning authorized and plan approved; implementation authorization remains pending |
 
-Gate 4 approval does not authorize implementation planning. Gate 5 authorization remains separate and pending.
+Gate 4 approval did not itself authorize implementation planning. Separate Gate 5 authorization was recorded under DEC-038 and the plan was approved under DEC-039; no implementation is authorized.

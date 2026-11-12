@@ -485,5 +485,32 @@ Discovery record. Stakeholder statements are recorded as given and are not gener
 - **Date:** Not recorded
 - **Review:** [SupportIQ Product Requirements Document](../approved/PRD.md)
 - **Response:** Approved the PRD, with Q-033 (the baseline's 10 MB per-file upload maximum) remaining open and documented.
-- **Recorded finding:** Gate 4 PRD approval is recorded. Q-033 remains open and was not resolved by approval. Implementation planning remains unauthorized pending separate Gate 5 approval.
+- **Recorded finding:** Gate 4 PRD approval is recorded. Q-033 remained open at the time and was not resolved by that approval; it was subsequently resolved under DEC-040. At that time, implementation planning remained unauthorized; separate Gate 5 authorization was subsequently recorded under DEC-038.
 - **Related records:** DEC-037 and EV-063.
+
+## Gate 5 — Implementation-planning authorization
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Review:** Gate 5 authorization prompt for the selected implementation-planning workflow.
+- **Response:** Yes; authorized preparation of an implementation-planning draft.
+- **Recorded finding:** Gate 5 planning authorization is recorded. At that point it did not approve the resulting plan or authorize implementation; the plan was subsequently approved under DEC-039. Q-033 (the baseline's 10 MB per-file upload maximum) was open at the time and was subsequently resolved under DEC-040.
+- **Related records:** DEC-038 and EV-064.
+
+## Implementation plan approval
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Review:** [SupportIQ Implementation Plan](../../implementation/implementation-plan.md) and [Feature and Task Board](../../implementation/feature-task-board.md).
+- **Response:** Approved the implementation plan as written.
+- **Recorded finding:** The planning artifact is approved. This approval does not authorize implementation or resolve the open requirements/design decisions that remained at that time; Q-033 was subsequently resolved under DEC-040.
+- **Related records:** DEC-039 and EV-065.
+
+## Q-033 — Per-file upload maximum
+
+- **Stakeholder:** Project owner
+- **Date:** 2026-11-12
+- **Question:** Does the baseline's 10 MB maximum per uploaded file remain the approved first-release limit?
+- **Response:** “we can mark 10MB upload file limit”
+- **Recorded finding:** Confirmed a maximum upload size of 10 MB per file for the first release. Q-033 is resolved; the original baseline remains unchanged.
+- **Related records:** DEC-040, EV-066, FR-KB-17, AC-014, and CHG-001.
